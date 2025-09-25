@@ -1,28 +1,28 @@
-// Load tasks from localStorage when the page loads
+// Load saved tasks on page load
 window.onload = function() {
   const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
   tasks.forEach(task => addTaskToList(task));
 }
 
-// Function to add task
+// Add a new task
 function addTask() {
-  let input = document.getElementById("taskInput");
-  let task = input.value.trim();
-  if (task) {
-    addTaskToList(task);
+  const input = document.getElementById("taskInput");
+  const task = input.value.trim();
+  if (!task) return;
 
-    // Save to localStorage
-    let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-    tasks.push(task);
-    localStorage.setItem('tasks', JSON.stringify(tasks));
+  addTaskToList(task);
 
-    input.value = "";
-  }
+  // Save to localStorage
+  let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+  tasks.push(task);
+  localStorage.setItem('tasks', JSON.stringify(tasks));
+
+  input.value = "";
 }
 
-// Helper to create task in the list
+// Helper: add task element to the page
 function addTaskToList(task) {
-  let li = document.createElement("li");
+  const li = document.createElement("li");
   li.innerHTML = `
     <span>${task}</span>
     <button onclick="removeTask(this)">❌</button>
@@ -33,13 +33,18 @@ function addTaskToList(task) {
 
 // Remove task and update localStorage
 function removeTask(button) {
-  let li = button.parentElement;
-  let taskText = li.querySelector('span').textContent;
+  const li = button.parentElement;
+  const taskText = li.querySelector('span').textContent;
 
-  // Remove from localStorage
   let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
   tasks = tasks.filter(t => t !== taskText);
   localStorage.setItem('tasks', JSON.stringify(tasks));
 
   li.remove();
+}
+
+// Clear all tasks
+function clearAllTasks() {
+  document.getElementById("taskList").innerHTML = "";
+  localStorage.removeItem('tasks');
 }
